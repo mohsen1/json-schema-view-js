@@ -26,7 +26,14 @@
     "test",
     "tests"
   ],
-  "dependencies": {
-    "json-formatter-js": "~0.2.0"
-  }
+  "_release": "0.2.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.2.0",
+    "commit": "a9c90f0666329759259a457c2c91a77e61fc72c6"
+  },
+  "_source": "git://github.com/mohsen1/json-formatter-js.git",
+  "_target": "~0.2.0",
+  "_originalSource": "json-formatter-js",
+  "_direct": true
 }

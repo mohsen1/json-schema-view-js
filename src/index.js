@@ -109,7 +109,7 @@ export default class JSONSchemaView {
       ${_if(this.isPrimitive)`
         <div class="primitive">
           ${_if(this.isPrimitiveCollapsible())`
-            <a class="title"><span class="toggle-handle"></span>${this.schema.title} </a>
+            <a class="title"><span class="toggle-handle"></span>${this.schema.title || ''} </a>
           `}
 
           <span class="type">${this.schema.type}</span>
@@ -146,7 +146,9 @@ export default class JSONSchemaView {
             <span class="range maxLength">maxLength:${this.schema.maxLength}</span>
           `}
 
-          <div class="inner description">${this.schema.description}</div>
+          ${_if(this.schema.description)`
+            <div class="inner description">${this.schema.description}</div>
+          `}
 
           ${_if(!this.isCollapsed && this.schema.enum)`
             ${this.enum(this.schema, this.isCollapsed, this.open)}
@@ -163,7 +165,7 @@ export default class JSONSchemaView {
       ${_if(this.isArray)`
         <div class="array">
           <a class="title"><span class="toggle-handle"></span>${
-            this.schema.title
+            this.schema.title || ''
           }<span class="opening bracket">[</span>${_if(this.isCollapsed)`
             <span class="closing bracket">]</span>
           `}</a>
@@ -176,10 +178,8 @@ export default class JSONSchemaView {
             </span>
           `}
           <div class="inner">
-            <div class="description">${this.schema.description}</div>
+            <div class="description">${this.schema.description || ''}</div>
             ${_if(!this.isCollapsed)`
-              <!-- TODO -->
-              <json-schema-view schema="schema.items" open="open - 1"></json-schema-view>
             `}
           </div>
 
@@ -201,24 +201,14 @@ export default class JSONSchemaView {
       ${_if(!this.isPrimitive && !this.isArray)`
         <div class="object">
           <a class="title"><span
-            class="toggle-handle"></span>${this.schema.title} <span
+            class="toggle-handle"></span>${this.schema.title || ''} <span
             class="opening brace">{</span>${_if(this.isCollapsed)`
               <span class="closing brace" ng-if="isCollapsed">}</span>
           `}</a>
 
           <div class="inner">
-            <div class="description">${this.schema.description}</div>
-
-            ${(typeof this.properties === 'object') && Object.keys(this.properties).map(propertyName => {
-              const property = this.properties[propertyName];
-
-              return ` <div class="property">
-                <span class="name">${propertyName}:</span>
-                // TODO
-                <json-schema-view schema="property" open="open - 1"></json-schema-view>
-              </div>`;
-            })}
-
+            <div class="description">${this.schema.description || ''}</div>
+            <!-- children go here -->
           </div>
 
           ${_if(!this.isCollapsed && this.schema.enum)`
@@ -235,7 +225,7 @@ export default class JSONSchemaView {
         </div>
         `}
       </div>
-    `;
+    `.replace(/\s*\n/g, '\n').replace(/(\<\!\-\-).+/g, '').trim();
   }
 
   xOf(schema, type) {
@@ -259,9 +249,6 @@ export default class JSONSchemaView {
       ${_if(!isCollapsed && schema.enum)`
         <div class="inner enums">
           <b>Enum:</b>
-
-          <!-- TODO -->
-          <json-formatter class="inner" json="schema.enum" open="open"></json-formatter>
         </div>
       `}
     `;
@@ -271,12 +258,46 @@ export default class JSONSchemaView {
     const element = document.createElement('div');
     element.innerHTML = this.template();
 
+    if (this.open) {
+      this.appendChildren(element);
+    }
 
     // add event listener for toggling
     // this.element.querySelector('a.toggler-link')
     //   .addEventListener('click', this.toggleOpen.bind(this));
 
     return element.querySelector('div.json-schema-view');
+  }
+
+  appendChildren(element) {
+    const inner = element.querySelector('.inner');
+
+    if (this.schema.enum) {
+      const formatter = new JSONFormatter(this.schema.enum, this.open - 1);
+      const formatterEl = formatter.render();
+      formatterEl.classList.add('inner');
+      element.querySelector('.enums.inner').appendChild(formatterEl);
+
+    }
+
+    if (this.isArray) {
+      const view = new JSONSchemaView(this.schema.items, this.open - 1)
+      inner.appendChild(view.render());
+    }
+
+    if (typeof this.schema.properties === 'object') {
+      Object.keys(this.schema.properties).map(propertyName => {
+        const property = this.schema.properties[propertyName];
+        const tempDiv = document.createElement('div');;
+        tempDiv.innerHTML = `<div class="property">
+          <span class="name">${propertyName}:</span>
+        </div>`;
+        const view = new JSONSchemaView(property, this.open - 1);
+        tempDiv.querySelector('.property').appendChild(view.render());
+
+        inner.appendChild(tempDiv.querySelector('.property'));
+      });
+    }
   }
 }
 
