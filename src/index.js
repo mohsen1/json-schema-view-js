@@ -230,16 +230,8 @@ export default class JSONSchemaView {
 
   xOf(schema, type) {
     return `
-      <div class="inner">
+      <div class="inner ${type}">
         <b>${convertXOf(type)}:</b>
-        ${
-          this.schema && Array.isArray(this.schema[type]) && this.schema[type].map(sch => `
-            <div class="inner">
-              <!-- TODO -->
-              <json-schema-view schema="schema"></json-schema-view>
-            </div>
-          `)
-        }
       </div>
     `;
   }
@@ -286,7 +278,7 @@ export default class JSONSchemaView {
     }
 
     if (typeof this.schema.properties === 'object') {
-      Object.keys(this.schema.properties).map(propertyName => {
+      Object.keys(this.schema.properties).forEach(propertyName => {
         const property = this.schema.properties[propertyName];
         const tempDiv = document.createElement('div');;
         tempDiv.innerHTML = `<div class="property">
@@ -296,6 +288,22 @@ export default class JSONSchemaView {
         tempDiv.querySelector('.property').appendChild(view.render());
 
         inner.appendChild(tempDiv.querySelector('.property'));
+      });
+    }
+
+    if (this.schema.allOf) { appendXOf.call(this, 'allOf'); }
+    if (this.schema.oneOf) { appendXOf.call(this, 'oneOf'); }
+    if (this.schema.anyOf) { appendXOf.call(this, 'anyOf'); }
+
+    function appendXOf(type) {
+      const innerAllOf = element.querySelector(`.inner.${type}`);
+
+      this.schema[type].forEach(schema => {
+        const inner = document.createElement('div');
+        inner.classList.add('inner');
+        const view = new JSONSchemaView(schema, this.open - 1);
+        inner.appendChild(view.render());
+        innerAllOf.appendChild(inner);
       });
     }
   }
