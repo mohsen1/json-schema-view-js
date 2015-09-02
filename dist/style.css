@@ -1,7 +1,7 @@
 /*!
- * json-formatter-js
- * https://github.com/mohsen1/json-formatter-js#readme
- * Version: 0.2.0 - 2015-08-31T23:22:23.431Z
+ * json-schema-view-js
+ * https://github.com/mohsen1/json-schema-view-js#readme
+ * Version: 0.0.0 - 2015-09-01T23:51:15.939Z
  * License: MIT
  */
 
@@ -93,7 +93,7 @@ json-schema-view.collapsed .property {
 json-schema-view.collapsed .closeing.brace {
   display: inline-block;
 }
-.json-schema-view.collapsed .toggler,
-json-schema-view.collapsed .toggler {
+.json-schema-view.collapsed .toggle-handle,
+json-schema-view.collapsed .toggle-handle {
   transform: rotate(-90deg);
 }

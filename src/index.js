@@ -74,47 +74,33 @@ export default class JSONSchemaView {
       !this.schema.items &&
       this.schema.type !== 'array' &&
       this.schema.type !== 'object';
-  }
 
-  /*
-   * Toggles the 'collapsed' state
-  */
-  toggle() {
-    this.isCollapsed = !this.isCollapsed;
-  }
-
-  /*
-   * Returns true if property is required in given schema
-  */
-  isRequired(schema, parent) {
-    if (parent && Array.isArray(parent.required) && schema.name) {
-      return parent.required.indexOf(schema.name) > -1;
+    // populate isRequired property down to properties
+    if (Array.isArray(this.schema.required)) {
+      this.schema.required.forEach(requiredProperty => {
+        if (typeof this.schema.properties[requiredProperty] === 'object') {
+          this.schema.properties[requiredProperty].isRequired = true;
+        }
+      });
     }
-
-    return false;
   }
 
   /*
-   * Returns true if the schema is too simple to be collapsible
+   * Returns the template with populated properties.
+   * This template does not have the children
   */
-  isPrimitiveCollapsible() {
-    return this.schema.description || this.schema.title;
-  }
-
   template() {
-
-    return `<div class="json-schema-view ${_if(this.collapsed)`collapsed`}">
-
+    return `
       <!-- Primitive -->
       ${_if(this.isPrimitive)`
         <div class="primitive">
-          ${_if(this.isPrimitiveCollapsible())`
+          ${_if(this.schema.description || this.schema.title)`
             <a class="title"><span class="toggle-handle"></span>${this.schema.title || ''} </a>
           `}
 
-          <span class="type">${this.schema.type}</span>
+            <span class="type">${this.schema.type}</span>
 
-          ${_if(this.isRequired(this.schema))`
+          ${_if(this.schema.isRequired)`
             <span class="required">*</span>
           `}
 
@@ -146,7 +132,7 @@ export default class JSONSchemaView {
             <span class="range maxLength">maxLength:${this.schema.maxLength}</span>
           `}
 
-          ${_if(this.schema.description)`
+          ${_if(this.schema.description && !this.isCollapsed)`
             <div class="inner description">${this.schema.description}</div>
           `}
 
@@ -154,9 +140,9 @@ export default class JSONSchemaView {
             ${this.enum(this.schema, this.isCollapsed, this.open)}
           `}
 
-          ${_if(this.schema.allOf)`${this.xOf(this.schema, 'allOf')}`}
-          ${_if(this.schema.oneOf)`${this.xOf(this.schema, 'oneOf')}`}
-          ${_if(this.schema.anyOf)`${this.xOf(this.schema, 'anyOf')}`}
+          ${_if(this.schema.allOf && !this.isCollapsed)`${this.xOf(this.schema, 'allOf')}`}
+          ${_if(this.schema.oneOf && !this.isCollapsed)`${this.xOf(this.schema, 'oneOf')}`}
+          ${_if(this.schema.anyOf && !this.isCollapsed)`${this.xOf(this.schema, 'anyOf')}`}
         </div>
       `}
 
@@ -164,22 +150,16 @@ export default class JSONSchemaView {
       <!-- Array -->
       ${_if(this.isArray)`
         <div class="array">
-          <a class="title"><span class="toggle-handle"></span>${
-            this.schema.title || ''
-          }<span class="opening bracket">[</span>${_if(this.isCollapsed)`
-            <span class="closing bracket">]</span>
-          `}</a>
+          <a class="title"><span class="toggle-handle"></span>${this.schema.title || ''}<span class="opening bracket">[</span>${_if(this.isCollapsed)`<span class="closing bracket">]</span>`}</a>
           ${_if(!this.isCollapsed && (this.schema.uniqueItems || this.schema.minItems || this.schema.maxItems))`
-            <span>
-              <span title="items range">(${this.schema.minItems || 0}..${this.schema.maxItems || '∞'})</span>
-              ${_if(!this.isCollapsed && this.schema.uniqueItems)`
-                <span title="unique" class="uniqueItems">♦</span>
-              `}
-            </span>
+          <span>
+            <span title="items range">(${this.schema.minItems || 0}..${this.schema.maxItems || '∞'})</span>
+            ${_if(!this.isCollapsed && this.schema.uniqueItems)`<span title="unique" class="uniqueItems">♦</span>`}
+          </span>
           `}
           <div class="inner">
-            <div class="description">${this.schema.description || ''}</div>
-            ${_if(!this.isCollapsed)`
+            ${_if(!this.isCollapsed && this.schema.description)`
+              <div class="description">${this.schema.description}</div>
             `}
           </div>
 
@@ -187,12 +167,12 @@ export default class JSONSchemaView {
             ${this.enum(this.schema, this.isCollapsed, this.open)}
           `}
 
-          ${_if(this.schema.allOf)`${this.xOf(this.schema, 'allOf')}`}
-          ${_if(this.schema.oneOf)`${this.xOf(this.schema, 'oneOf')}`}
-          ${_if(this.schema.anyOf)`${this.xOf(this.schema, 'anyOf')}`}
+          ${_if(this.schema.allOf && !this.isCollapsed)`${this.xOf(this.schema, 'allOf')}`}
+          ${_if(this.schema.oneOf && !this.isCollapsed)`${this.xOf(this.schema, 'oneOf')}`}
+          ${_if(this.schema.anyOf && !this.isCollapsed)`${this.xOf(this.schema, 'anyOf')}`}
 
           ${_if(!this.isCollapsed)`
-            <span class="closing bracket">]</span>
+          <span class="closing bracket">]</span>
           `}
         </div>
       `}
@@ -207,7 +187,9 @@ export default class JSONSchemaView {
           `}</a>
 
           <div class="inner">
-            <div class="description">${this.schema.description || ''}</div>
+            ${_if(!this.isCollapsed && this.schema.description)`
+              <div class="description">${this.schema.description}</div>
+            `}
             <!-- children go here -->
           </div>
 
@@ -215,19 +197,21 @@ export default class JSONSchemaView {
             ${this.enum(this.schema, this.isCollapsed, this.open)}
           `}
 
-          ${_if(this.schema.allOf)`${this.xOf(this.schema, 'allOf')}`}
-          ${_if(this.schema.oneOf)`${this.xOf(this.schema, 'oneOf')}`}
-          ${_if(this.schema.anyOf)`${this.xOf(this.schema, 'anyOf')}`}
+          ${_if(this.schema.allOf && !this.isCollapsed)`${this.xOf(this.schema, 'allOf')}`}
+          ${_if(this.schema.oneOf && !this.isCollapsed)`${this.xOf(this.schema, 'oneOf')}`}
+          ${_if(this.schema.anyOf && !this.isCollapsed)`${this.xOf(this.schema, 'anyOf')}`}
 
           ${_if(!this.isCollapsed)`
-            <span class="closing brace">}</span>
+          <span class="closing brace">}</span>
           `}
         </div>
-        `}
-      </div>
-    `.replace(/\s*\n/g, '\n').replace(/(\<\!\-\-).+/g, '').trim();
+      `}
+`.replace(/\s*\n/g, '\n').replace(/(\<\!\-\-).+/g, '').trim();
   }
 
+  /*
+   * Template for oneOf, anyOf and allOf
+  */
   xOf(schema, type) {
     return `
       <div class="inner ${type}">
@@ -236,6 +220,9 @@ export default class JSONSchemaView {
     `;
   }
 
+  /*
+   * Template for enums
+  */
   enum(schema, isCollapsed, open) {
     return `
       ${_if(!isCollapsed && schema.enum)`
@@ -246,21 +233,46 @@ export default class JSONSchemaView {
     `;
   }
 
-  render() {
-    const element = document.createElement('div');
-    element.innerHTML = this.template();
+  /*
+   * Toggles the 'collapsed' state
+  */
+  toggle() {
+    this.isCollapsed = !this.isCollapsed;
+    this.render();
+  }
 
-    if (this.open) {
-      this.appendChildren(element);
+  /*
+   * Renders the element and returns it
+  */
+  render() {
+    if (!this.element) {
+      this.element = document.createElement('div');
+      this.element.classList.add('json-schema-view');
+    }
+
+    if (this.isCollapsed) {
+      this.element.classList.add('collapsed');
+    } else {
+      this.element.classList.remove('collapsed');
+    }
+
+    this.element.innerHTML = this.template();
+
+
+    if (!this.isCollapsed) {
+      this.appendChildren(this.element);
     }
 
     // add event listener for toggling
-    // this.element.querySelector('a.toggler-link')
-    //   .addEventListener('click', this.toggleOpen.bind(this));
-
-    return element.querySelector('div.json-schema-view');
+    if (this.element.querySelector('a.title')) {
+      this.element.querySelector('a.title').addEventListener('click', this.toggle.bind(this));
+    }
+    return this.element;
   }
 
+  /*
+   * Appends children to given element based on current schema
+  */
   appendChildren(element) {
     const inner = element.querySelector('.inner');
 
