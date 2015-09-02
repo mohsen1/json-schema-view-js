@@ -3,10 +3,6 @@
 /* globals JSONSchemaView */
 
 import {
-  getType,
-  getValuePreview,
-  getPreview,
-  addPropertyName,
   convertXOf,
   _if
 } from './helpers.js';
