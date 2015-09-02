@@ -29,12 +29,20 @@ const schema = {
 
 describe('rendering', ()=> {
   describe('blood type', ()=> {
-    it('collapsed with 0 for open', function () {
+    it('renders collapsed with 0 for open', ()=> {
       const view = new JSONSchemaView(schema, 0);
       const el = view.render();
 
-      expect(el.classList.toString().indexOf('collapsed')).to.be.greaterThan(-1);
-      expect(el.querySelector('.inner').innerText.trim()).to.equal('');
+      expect(el.classList.toString()).to.contain('collapsed');
+      expect(el.querySelector('.inner.oneOf')).to.be.null;
+    });
+
+    it('renders the children when open is not 0', ()=> {
+      const view = new JSONSchemaView(schema, 2);
+      const el = view.render();
+
+      expect(el.classList.toString()).not.to.contain('collapsed');
+      expect(el.querySelector('.inner.oneOf').innerHTML.trim()).not.to.equal('');
     });
   });
 });
