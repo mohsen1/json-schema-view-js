@@ -13,6 +13,7 @@ var header      = require('gulp-header');
 var rename      = require('gulp-rename');
 var jshint      = require('gulp-jshint');
 var connect     = require('gulp-connect');
+var uglify      = require('gulp-uglify');
 
 var config = {
   pkg : require('./package.json'),
@@ -36,6 +37,13 @@ gulp.task('scripts', ['jshint'], function() {
     .on('error', logError)
     .pipe(connect.reload())
     .pipe(fs.createWriteStream('dist/bundle.js'));
+});
+
+gulp.task('uglify', function() {
+  gulp.src('dist/bundle.js')
+    .pipe(uglify())
+    .pipe(rename({basename: 'bundle.min'}))
+    .pipe(gulp.dest('dist'));
 });
 
 gulp.task('styles', function() {
@@ -76,7 +84,7 @@ gulp.task('test', function(done) {
 });
 
 gulp.task('serve', ['watch', 'connect']);
-gulp.task('default', ['styles', 'scripts']);
+gulp.task('default', ['styles', 'scripts', 'uglify']);
 
 function logError(err) {
   console.log('Error :\n' + err.message);
