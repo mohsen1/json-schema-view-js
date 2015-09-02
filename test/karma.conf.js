@@ -1,8 +1,12 @@
+'use strict';
+
+/* jshint node: true */
+
 module.exports = function(config) {
   config.set({
 
     // Base path, that will be used to resolve files and exclude
-    basePath: '..',
+    basePath: require('path').join(__dirname, '..'),
 
     // Frameworks to use
     frameworks: ['mocha', 'chai'],
