@@ -3,64 +3,30 @@
 /* globals JSONSchemaView */
 
 import {
-  isObject,
-  getObjectName,
   getType,
   getValuePreview,
   getPreview,
   addPropertyName,
-  convertXOf
+  convertXOf,
+  _if
 } from './helpers.js';
 
-
-/*
- * if condition for ES6 template strings
- * to be used only in template string
- *
- * @example mystr = `Random is ${_if(Math.random() > 0.5)`greater than 0.5``
- *
- * @param {boolean} condition
- *
- * @returns {function} the template function
-*/
-function _if(condition) {
-  return condition ? normal : empty;
-}
-function empty(){
-  return '';
-}
-function normal (template, ...expressions) {
-  return template.slice(1).reduce((accumulator, part, i) => {
-    return accumulator + expressions[i] + part;
-  }, template[0]);
-}
 
 /**
  * @class JSONSchemaView
  *
- * JSONSchemaView allows you to render JSON objects in HTML with a
- * **collapsible** navigation.
+ * A pure JavaScript component for rendering JSON Schema in HTML.
 */
 export default class JSONSchemaView {
 
   /**
-   * @param {object} json The JSON object you want to render. It has to be an
-   * object or array. Do NOT pass raw JSON string.
+   * @param {object} schema The JSON Schema object
    *
    * @param {number} [open=1] his number indicates up to how many levels the
    * rendered tree should expand. Set it to `0` to make the whole tree collapsed
    * or set it to `Infinity` to expand the tree deeply
-   *
-   * @param {object} [config=defaultConfig] -
-   *  defaultConfig = {
-   *   hoverPreviewEnabled: false,
-   *   hoverPreviewArrayCount: 100,
-   *   hoverPreviewFieldCount: 5
-   * }
-   * @param {string} [key=undefined] The key that this object in it's parent
-   * context
   */
-  constructor(schema, open, config, key) {
+  constructor(schema, open) {
     this.schema = schema;
     this.open = open;
     this.isCollapsed = open <= 0;

@@ -1,5 +1,5 @@
 {
-  "name": "json-formatter-js",
+  "name": "json-schema-view-js",
   "version": "0.2.0",
   "authors": [
     "Mohsen Azimi <me@azimi.me>"
@@ -18,7 +18,7 @@
     "json"
   ],
   "license": "MIT",
-  "homepage": "mohsen1/json-formatter-js",
+  "homepage": "mohsen1/json-schema-view-js",
   "ignore": [
     "**/.*",
     "node_modules",
