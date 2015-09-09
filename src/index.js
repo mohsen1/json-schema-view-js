@@ -38,7 +38,7 @@ export default class JSONSchemaView {
       this.schema.type !== 'object';
 
     // populate isRequired property down to properties
-    if (Array.isArray(this.schema.required)) {
+    if (this.schema && Array.isArray(this.schema.required)) {
       this.schema.required.forEach(requiredProperty => {
         if (typeof this.schema.properties[requiredProperty] === 'object') {
           this.schema.properties[requiredProperty].isRequired = true;
@@ -52,6 +52,10 @@ export default class JSONSchemaView {
    * This template does not have the children
   */
   template() {
+    if (!this.schema) {
+      return '';
+    }
+
     return `
       <!-- Primitive -->
       ${_if(this.isPrimitive)`
@@ -220,6 +224,9 @@ export default class JSONSchemaView {
 
     this.element.innerHTML = this.template();
 
+    if (!this.schema) {
+      return this.element;
+    }
 
     if (!this.isCollapsed) {
       this.appendChildren(this.element);

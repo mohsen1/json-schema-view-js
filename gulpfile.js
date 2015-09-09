@@ -39,7 +39,7 @@ gulp.task('scripts', ['jshint'], function() {
     .pipe(fs.createWriteStream('dist/bundle.js'));
 });
 
-gulp.task('uglify', function() {
+gulp.task('uglify', ['scripts'], function() {
   gulp.src('dist/bundle.js')
     .pipe(uglify())
     .pipe(rename({basename: 'bundle.min'}))
@@ -84,7 +84,7 @@ gulp.task('test', function(done) {
 });
 
 gulp.task('serve', ['watch', 'connect']);
-gulp.task('default', ['styles', 'scripts', 'uglify']);
+gulp.task('default', ['styles', 'uglify']);
 
 function logError(err) {
   console.log('Error :\n' + err.message);

@@ -4,7 +4,8 @@
   "description": "JSON Schema View core library ",
   "main": "dist/bundle.js",
   "scripts": {
-    "test": "gulp test --singleRun=true"
+    "test": "gulp test --singleRun=true",
+    "build": "gulp"
   },
   "repository": {
     "type": "git",
