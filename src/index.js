@@ -21,10 +21,13 @@ export default class JSONSchemaView {
    * @param {number} [open=1] his number indicates up to how many levels the
    * rendered tree should expand. Set it to `0` to make the whole tree collapsed
    * or set it to `Infinity` to expand the tree deeply
+   * @param {object} options.
+   *  theme {string}: one of the following options: ['dark']
   */
-  constructor(schema, open) {
+  constructor(schema, open, options = {theme: null}) {
     this.schema = schema;
     this.open = open;
+    this.options = options;
     this.isCollapsed = open <= 0;
 
     // Determine if a schema is an array
@@ -220,6 +223,10 @@ export default class JSONSchemaView {
       this.element.classList.add('collapsed');
     } else {
       this.element.classList.remove('collapsed');
+    }
+
+    if (this.options.theme) {
+      this.element.classList.add(`json-schema-view-${this.options.theme}`);
     }
 
     this.element.innerHTML = this.template();

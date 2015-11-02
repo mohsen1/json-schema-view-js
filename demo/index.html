@@ -5,10 +5,129 @@
 
     <link rel="stylesheet" href="../bower_components/json-formatter-js/dist/style.css">
     <link rel="stylesheet" href="../dist/style.css">
+    <style>
+      .json-schema-view-dark {
+        background: #222;
+      }
+      h3 + div > div {
+        padding: 1em;
+      }
+
+      pre {
+        background: #333;
+        color: white;
+        padding: 10px;
+        font-size: 1.2em;
+        line-height: 1.3;
+      }
+
+      /*
+       * Page layout
+      */
+      body {
+        max-width: 80vw;
+        margin: 30px auto;
+        font-family: sans-serif;
+      }
+      header {
+        overflow: hidden;
+      }
+      header h1 {
+        float: left;
+      }
+      header > div {
+        text-align: right;
+        padding: 10px;
+      }
+      header > div * {
+        vertical-align: middle;
+      }
+      .code-in-gh {
+        background: steelblue;
+        color: white;
+        padding: .5em;
+        border-radius: 5px;
+        text-decoration: none;
+      }
+    </style>
   </head>
   <body>
+    <div class="intro">
+      <header>
+        <h1><code>JSONSchemaView</code></h1>
+        <div>
+          <iframe src="http://ghbtns.com/github-btn.html?user=mohsen1&amp;repo=json-schema-view-js&amp;type=watch&amp;size=large&amp;count=true" allowtransparency="true" frameborder="0" scrolling="0" width="170" height="30"></iframe>
+          <a class="code-in-gh" href="https://github.com/mohsen1/json-schema-view-js">Code in GitHub</a>
+        </div>
+      </header>
+      <p>JSON Schema is very verbose and hard to read in JSON. This component helps rendering a JSON Schema in a user readable format.</p>
+      <h2>Install via Bower or npm</h2>
+      <pre>npm install --save json-schema-view-js</pre>
+      <pre>bower install --save json-schema-view-js</pre>
+      <h2>API</h2>
+      <pre>import JSONSchemaView from 'json-schema-view-js';
+// or use the global `JSONSchemaView` constructor function
+
+const schema = {type: 'string', title: 'Name'};
+
+const view = new JSONSchemaView(schema, 1, {theme: 'dark'});
+
+document.body.appendChild(view.render());</pre>
+      <a href="https://github.com/mohsen1/json-schema-view-js">Read more on GitHub</a>
+    </div>
+    <h2>Demo</h2>
     <div class="results"></div>
     <script>
+
+      var complex = {
+        title: 'Person',
+        description: 'A person in our database',
+        type: 'object',
+        properties: {
+          name: {
+            type: 'string'
+          },
+          age: {
+            type: 'integer',
+            format: 'int64',
+            minimum: 0
+          },
+          email: {
+            type: 'string'
+          },
+          single: {
+            type: 'boolean'
+          },
+          school: {
+            type: 'object',
+            title: 'School',
+            description: 'A School',
+            properties: {
+              name: {
+                type: 'string'
+              },
+              district: {
+                type: 'string'
+              }
+            },
+            required: ['name']
+          },
+          interests: {
+            type: 'array',
+            items: {
+              title: 'Interest',
+              description: 'An interest',
+              properties: {
+                name: {
+                  type: 'string'
+                }
+              },
+              required: ['name']
+            }
+          }
+        },
+        required: ['name', 'age']
+      };
 
       var examples = [
         {
@@ -205,55 +324,13 @@
 
         {
           title: 'Complex',
-          schema: {
-            title: 'Person',
-            description: 'A person in our database',
-            type: 'object',
-            properties: {
-              name: {
-                type: 'string'
-              },
-              age: {
-                type: 'integer',
-                format: 'int64',
-                minimum: 0
-              },
-              email: {
-                type: 'string'
-              },
-              single: {
-                type: 'boolean'
-              },
-              school: {
-                type: 'object',
-                title: 'School',
-                description: 'A School',
-                properties: {
-                  name: {
-                    type: 'string'
-                  },
-                  district: {
-                    type: 'string'
-                  }
-                },
-                required: ['name']
-              },
-              interests: {
-                type: 'array',
-                items: {
-                  title: 'Interest',
-                  description: 'An interest',
-                  properties: {
-                    name: {
-                      type: 'string'
-                    }
-                  },
-                  required: ['name']
-                }
-              }
-            },
-            required: ['name', 'age']
-          }
+          schema: complex
+        },
+
+        {
+          title: 'Dark Theme',
+          schema: complex,
+          theme: 'dark'
         },
 
         {
@@ -349,7 +426,7 @@
 
       examples.forEach(function(example) {
         var title = document.createElement('h3');
-        var formatter = new JSONSchemaView(example.schema, 1);
+        var formatter = new JSONSchemaView(example.schema, 1, {theme: example.theme});
 
         title.innerText = example.title;
 

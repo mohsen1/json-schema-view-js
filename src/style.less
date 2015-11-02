@@ -1,17 +1,14 @@
-.json-schema-view, json-schema-view {
+.theme(@text-color: #000, @bold-color: #333, @required-color: #F00, @blue: blue, @green: green,
+  @indent: 18px, @font-size: 14px) {
+
   font-family: monospace;
   font-size: 0;
   display: table-cell;
-  @indent: 18px;
-  @font-size: 14px;
-  @bold-color: #333;
-  @required: #F00;
 
 
   > * {
     font-size: @font-size;
   }
-
 
   .toggle-handle {
     cursor: pointer;
@@ -45,11 +42,15 @@
     }
   }
 
+  .title, .brace, .bracket {
+    color: @bold-color;
+  }
+
   .property {
     font-size: 0;
     display: table-row;
 
-    >*{
+    > * {
       font-size: @font-size;
       padding: .2em;
     }
@@ -57,17 +58,17 @@
   }
 
   .name {
-    color: blue;
+    color: @blue;
     display: table-cell;
     vertical-align: top;
   }
 
   .type {
-    color: green;
+    color: @green;
   }
 
   .required {
-    color: @required;
+    color: @required-color;
   }
 
   .inner {
@@ -88,4 +89,13 @@
       transform: rotate(-90deg);
     }
   }
+}
+
+.json-schema-view, json-schema-view {
+  .theme();
+}
+
+.json-schema-view.json-schema-view-dark,
+json-schema-view[json-schema-view-dark] {
+  .theme(@text-color: #fff, @bold-color: #eee, @required-color: #fe0000, @blue: lightblue, @green: lightgreen);
 }
