@@ -31,8 +31,8 @@ gulp.task('jshint', function() {
 });
 
 gulp.task('scripts', ['jshint'], function() {
-  return browserify('src/index.js', { debug: true })
-    .transform(babelify)
+  return browserify('src/index.js', {debug: true, standalone: 'JSONSchemaView'})
+    .transform(babelify.configure({compact: false}))
     .bundle()
     .on('error', logError)
     .pipe(connect.reload())

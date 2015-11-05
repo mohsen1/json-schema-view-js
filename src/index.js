@@ -30,11 +30,18 @@ export default class JSONSchemaView {
     this.options = options;
     this.isCollapsed = open <= 0;
 
+    // if schema is an empty object which means any JOSN
+    this.isAny = typeof schema === 'object' &&
+      !Array.isArray(schema) &&
+      !Object.keys(schema)
+      .filter(k=> ['title', 'description'].indexOf(k) === -1).length;
+
     // Determine if a schema is an array
-    this.isArray = this.schema && this.schema.type === 'array';
+    this.isArray = !this.isAny && this.schema && this.schema.type === 'array';
 
     // Determine if a schema is a primitive
-    this.isPrimitive = this.schema &&
+    this.isPrimitive = !this.isAny &&
+      this.schema &&
       !this.schema.properties &&
       !this.schema.items &&
       this.schema.type !== 'array' &&
@@ -60,6 +67,21 @@ export default class JSONSchemaView {
     }
 
     return `
+      <!-- Any -->
+      ${_if(this.isAny)`
+        <div class="any">
+          ${_if(this.schema.description || this.schema.title)`
+            <a class="title"><span class="toggle-handle"></span>${this.schema.title || ''} </a>
+          `}
+
+          <span class="type type-any">&lt;any&gt;</span>
+
+          ${_if(this.schema.description && !this.isCollapsed)`
+            <div class="inner description">${this.schema.description}</div>
+          `}
+        </div>
+      `}
+
       <!-- Primitive -->
       ${_if(this.isPrimitive)`
         <div class="primitive">
@@ -147,7 +169,7 @@ export default class JSONSchemaView {
       `}
 
       <!-- Object -->
-      ${_if(!this.isPrimitive && !this.isArray)`
+      ${_if(!this.isPrimitive && !this.isArray && !this.isAny)`
         <div class="object">
           <a class="title"><span
             class="toggle-handle"></span>${this.schema.title || ''} <span
@@ -252,6 +274,10 @@ export default class JSONSchemaView {
   appendChildren(element) {
     const inner = element.querySelector('.inner');
 
+    if (!inner) {
+      return;
+    }
+
     if (this.schema.enum) {
       const formatter = new JSONFormatter(this.schema.enum, this.open - 1);
       const formatterEl = formatter.render();
@@ -296,6 +322,3 @@ export default class JSONSchemaView {
     }
   }
 }
-
-// TODO: UMD
-window.JSONSchemaView = JSONSchemaView;

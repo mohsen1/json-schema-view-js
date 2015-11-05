@@ -1,7 +1,7 @@
 /*!
  * json-schema-view-js
  * https://github.com/mohsen1/json-schema-view-js#readme
- * Version: 0.3.0 - 2015-11-02T18:53:49.075Z
+ * Version: 0.3.2 - 2015-11-04T23:49:45.707Z
  * License: MIT
  */
 
@@ -80,6 +80,10 @@ json-schema-view .name {
 .json-schema-view .type,
 json-schema-view .type {
   color: green;
+}
+.json-schema-view .type-any,
+json-schema-view .type-any {
+  color: #3333ff;
 }
 .json-schema-view .required,
 json-schema-view .required {
@@ -179,6 +183,10 @@ json-schema-view[json-schema-view-dark] .name {
 .json-schema-view.json-schema-view-dark .type,
 json-schema-view[json-schema-view-dark] .type {
   color: lightgreen;
+}
+.json-schema-view.json-schema-view-dark .type-any,
+json-schema-view[json-schema-view-dark] .type-any {
+  color: #d4ebf2;
 }
 .json-schema-view.json-schema-view-dark .required,
 json-schema-view[json-schema-view-dark] .required {
