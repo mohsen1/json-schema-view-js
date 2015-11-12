@@ -39,13 +39,15 @@ export default class JSONSchemaView {
     // Determine if a schema is an array
     this.isArray = !this.isAny && this.schema && this.schema.type === 'array';
 
+    this.isObject = this.schema &&
+      (this.schema.type === 'object' ||
+       this.schema.properties ||
+       this.schema.anyOf ||
+       this.schema.oneof ||
+       this.schema.allOf);
+
     // Determine if a schema is a primitive
-    this.isPrimitive = !this.isAny &&
-      this.schema &&
-      !this.schema.properties &&
-      !this.schema.items &&
-      this.schema.type !== 'array' &&
-      this.schema.type !== 'object';
+    this.isPrimitive = !this.isAny && !this.isArray && !this.isObject;
 
     // populate isRequired property down to properties
     if (this.schema && Array.isArray(this.schema.required)) {
