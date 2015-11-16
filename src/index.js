@@ -49,6 +49,16 @@ export default class JSONSchemaView {
     // Determine if a schema is a primitive
     this.isPrimitive = !this.isAny && !this.isArray && !this.isObject;
 
+    //
+    this.showToggle = this.schema.description ||
+      this.schema.title ||
+      (this.isPrimitive && (
+        this.schema.minimum ||
+        this.schema.maximum ||
+        this.schema.exclusiveMinimum ||
+        this.schema.exclusiveMaximum)
+      );
+
     // populate isRequired property down to properties
     if (this.schema && Array.isArray(this.schema.required)) {
       this.schema.required.forEach(requiredProperty => {
@@ -72,7 +82,7 @@ export default class JSONSchemaView {
       <!-- Any -->
       ${_if(this.isAny)`
         <div class="any">
-          ${_if(this.schema.description || this.schema.title)`
+          ${_if(this.showToggle)`
             <a class="title"><span class="toggle-handle"></span>${this.schema.title || ''} </a>
           `}
 
@@ -87,7 +97,7 @@ export default class JSONSchemaView {
       <!-- Primitive -->
       ${_if(this.isPrimitive)`
         <div class="primitive">
-          ${_if(this.schema.description || this.schema.title)`
+          ${_if(this.showToggle)`
             <a class="title"><span class="toggle-handle"></span>${this.schema.title || ''} </a>
           `}
 
