@@ -1,19 +1,64 @@
 'use strict';
 
-/* globals JSONSchemaView */
+import JSONFormatter from 'json-formatter-js';
+import {convertXOf, _if} from './helpers.ts';
+import './style.less';
 
-import {
-  convertXOf,
-  _if
-} from './helpers.js';
-
+interface JSONSchemaViewOptions {
+  theme: string
+}
 
 /**
  * @class JSONSchemaView
  *
  * A pure JavaScript component for rendering JSON Schema in HTML.
 */
-export default class JSONSchemaView {
+export = class JSONSchemaView {
+
+  private element: HTMLDivElement;
+
+  private get isCollapsed(): boolean {
+    return this.open <= 0;
+  }
+
+  // if schema is an empty object which means any JOSN
+  private get isAny(): boolean {
+    return typeof this.schema === 'object' &&
+      !Array.isArray(this.schema) &&
+      !Object.keys(this.schema)
+        .filter(k=> ['title', 'description'].indexOf(k) === -1).length;
+  }
+
+  // Determine if a schema is an array
+  private get isArray(): boolean {
+    return !this.isAny && this.schema && this.schema.type === 'array';
+  }
+
+  private get isObject(): boolean {
+    return this.schema &&
+      (this.schema.type === 'object' ||
+       this.schema.properties ||
+       this.schema.anyOf ||
+       this.schema.oneof ||
+       this.schema.allOf);
+  }
+
+  // Determine if a schema is a primitive
+  private get isPrimitive(): boolean {
+    return !this.isAny && !this.isArray && !this.isObject;
+  }
+
+  private get showToggle(): boolean {
+    return this.schema.description ||
+      this.schema.title ||
+      (this.isPrimitive && (
+        this.schema.minimum ||
+        this.schema.maximum ||
+        this.schema.exclusiveMinimum ||
+        this.schema.exclusiveMaximum)
+      );
+  }
+
 
   /**
    * @param {object} schema The JSON Schema object
@@ -24,40 +69,7 @@ export default class JSONSchemaView {
    * @param {object} options.
    *  theme {string}: one of the following options: ['dark']
   */
-  constructor(schema, open, options = {theme: null}) {
-    this.schema = schema;
-    this.open = open;
-    this.options = options;
-    this.isCollapsed = open <= 0;
-
-    // if schema is an empty object which means any JOSN
-    this.isAny = typeof schema === 'object' &&
-      !Array.isArray(schema) &&
-      !Object.keys(schema)
-      .filter(k=> ['title', 'description'].indexOf(k) === -1).length;
-
-    // Determine if a schema is an array
-    this.isArray = !this.isAny && this.schema && this.schema.type === 'array';
-
-    this.isObject = this.schema &&
-      (this.schema.type === 'object' ||
-       this.schema.properties ||
-       this.schema.anyOf ||
-       this.schema.oneof ||
-       this.schema.allOf);
-
-    // Determine if a schema is a primitive
-    this.isPrimitive = !this.isAny && !this.isArray && !this.isObject;
-
-    //
-    this.showToggle = this.schema.description ||
-      this.schema.title ||
-      (this.isPrimitive && (
-        this.schema.minimum ||
-        this.schema.maximum ||
-        this.schema.exclusiveMinimum ||
-        this.schema.exclusiveMaximum)
-      );
+  constructor(private schema: any, private open?: number, private options: JSONSchemaViewOptions = {theme: null}) {
 
     // populate isRequired property down to properties
     if (this.schema && Array.isArray(this.schema.required)) {

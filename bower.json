@@ -22,11 +22,7 @@
   "ignore": [
     "**/.*",
     "node_modules",
-    "bower_components",
     "test",
     "tests"
-  ],
-  "dependencies": {
-    "json-formatter-js": "~0.3.0"
-  }
+  ]
 }
