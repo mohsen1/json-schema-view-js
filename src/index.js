@@ -56,7 +56,12 @@ export default class JSONSchemaView {
         this.schema.minimum ||
         this.schema.maximum ||
         this.schema.exclusiveMinimum ||
-        this.schema.exclusiveMaximum)
+        this.schema.exclusiveMaximum ||
+        this.schema.format ||        
+        this.schema.default ||
+        this.schema.minLength ||
+        this.schema.maxLength ||
+        this.schema.enum)
       );
 
     // populate isRequired property down to properties
@@ -110,6 +115,10 @@ export default class JSONSchemaView {
           ${_if(!this.isCollapsed && this.schema.format)`
             <span class="format">(${this.schema.format})</span>
           `}
+
+          ${_if(!this.isCollapsed && this.schema.default)`
+            <span class="default">default: ${this.schema.default}</span>
+          `} 
 
           ${_if(!this.isCollapsed && this.schema.minimum)`
             <span class="range minimum">minimum:${this.schema.minimum}</span>
