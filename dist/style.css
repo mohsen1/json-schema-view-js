@@ -1,7 +1,7 @@
 /*!
  * json-schema-view-js
  * https://github.com/mohsen1/json-schema-view-js#readme
- * Version: 0.4.1 - 2016-08-11T09:20:02.719Z
+ * Version: 0.4.1 - 2016-12-26T23:51:39.556Z
  * License: MIT
  */
 
@@ -88,6 +88,12 @@ json-schema-view .type-any {
 .json-schema-view .required,
 json-schema-view .required {
   color: #F00;
+}
+.json-schema-view .format,
+json-schema-view .format,
+.json-schema-view .enums,
+json-schema-view .enums {
+  color: #000;
 }
 .json-schema-view .inner,
 json-schema-view .inner {
@@ -191,6 +197,12 @@ json-schema-view[json-schema-view-dark] .type-any {
 .json-schema-view.json-schema-view-dark .required,
 json-schema-view[json-schema-view-dark] .required {
   color: #fe0000;
+}
+.json-schema-view.json-schema-view-dark .format,
+json-schema-view[json-schema-view-dark] .format,
+.json-schema-view.json-schema-view-dark .enums,
+json-schema-view[json-schema-view-dark] .enums {
+  color: #fff;
 }
 .json-schema-view.json-schema-view-dark .inner,
 json-schema-view[json-schema-view-dark] .inner {
