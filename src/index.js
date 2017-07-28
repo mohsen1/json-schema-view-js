@@ -2,6 +2,7 @@
 
 /* globals JSONSchemaView */
 
+import JSONFormatter from 'json-formatter-js';
 import {
   convertXOf,
   _if
