@@ -20,6 +20,9 @@
     "url": "https://github.com/mohsen1/json-schema-view-js/issues"
   },
   "homepage": "https://github.com/mohsen1/json-schema-view-js#readme",
+  "dependencies": {
+     "json-formatter-js": "^2.2.0"
+  }
   "devDependencies": {
     "babel": "^5.8.21",
     "babelify": "^6.2.0",
@@ -33,7 +36,6 @@
     "gulp-minify-css": "^1.2.1",
     "gulp-rename": "^1.2.2",
     "gulp-uglify": "^1.4.0",
-    "json-formatter-js": "^2.2.0",
     "karma": "^0.13.9",
     "karma-babel-preprocessor": "^5.2.1",
     "karma-chai": "^0.1.0",
