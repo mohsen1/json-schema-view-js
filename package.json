@@ -1,6 +1,6 @@
 {
   "name": "json-schema-view-js",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "JSON Schema View core library ",
   "main": "dist/bundle.js",
   "scripts": {
@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/mohsen1/json-schema-view-js#readme",
   "dependencies": {
-     "json-formatter-js": "^2.2.0"
+    "json-formatter-js": "^2.2.0"
   },
   "devDependencies": {
     "babel": "^5.8.21",
