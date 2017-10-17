@@ -1,52 +1,61 @@
 'use strict';
 
-/* jshint node: true */
-
-var fs          = require('fs');
 var KarmaServer = require('karma').Server;
-var browserify  = require('browserify');
-var babelify    = require('babelify');
-var minifyCSS   = require('gulp-minify-css');
-var less        = require('gulp-less');
-var gulp        = require('gulp');
-var header      = require('gulp-header');
-var rename      = require('gulp-rename');
-var jshint      = require('gulp-jshint');
-var connect     = require('gulp-connect');
-var uglify      = require('gulp-uglify');
+var minifyCSS = require('gulp-minify-css');
+var less = require('gulp-less');
+var gulp = require('gulp');
+var header = require('gulp-header');
+var rename = require('gulp-rename');
+var eslint = require('gulp-eslint');
+var connect = require('gulp-connect');
+var gulpWebpack = require('webpack-stream');
+var webpack = require('webpack');
+var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+var webpackConfig = require('./webpack.config');
 
 var config = {
-  pkg : require('./package.json'),
+  pkg: require('./package.json'),
   banner:
-    '/*!\n' +
-    ' * <%= pkg.name %>\n' +
-    ' * <%= pkg.homepage %>\n' +
-    ' * Version: <%= pkg.version %> - <%= timestamp %>\n' +
-    ' * License: <%= pkg.license %>\n' +
-    ' */\n\n\n'
+  '/*!\n' +
+  ' * <%= pkg.name %>\n' +
+  ' * <%= pkg.homepage %>\n' +
+  ' * Version: <%= pkg.version %> - <%= timestamp %>\n' +
+  ' * License: <%= pkg.license %>\n' +
+  ' */\n\n\n'
 };
 
-gulp.task('jshint', function() {
-  return gulp.src(['src/**.js']).pipe(jshint());
+gulp.task('eslint', function () {
+  return gulp.src(['src/**.js']).pipe(eslint());
 });
 
-gulp.task('scripts', ['jshint'], function() {
-  return browserify('src/index.js', {debug: true, standalone: 'JSONSchemaView'})
-    .transform(babelify.configure({compact: false}))
-    .bundle()
-    .on('error', logError)
-    .pipe(connect.reload())
-    .pipe(fs.createWriteStream('dist/bundle.js'));
+gulp.task('scripts', function () {
+  var bundleConfig = Object.create(webpackConfig);
+
+  bundleConfig.plugins = bundleConfig.plugins.concat(new webpack.LoaderOptionsPlugin({
+    debug: true
+  }));
+
+  return gulp.src('src/index.js')
+    .pipe(gulpWebpack(bundleConfig, webpack))
+    .pipe(gulp.dest('dist/'));
 });
 
-gulp.task('uglify', ['scripts'], function() {
-  gulp.src('dist/bundle.js')
-    .pipe(uglify())
-    .pipe(rename({basename: 'bundle.min'}))
-    .pipe(gulp.dest('dist'));
+gulp.task('uglify', ['scripts'], function () {
+  var bundleConfig = Object.create(webpackConfig);
+  bundleConfig.plugins = bundleConfig.plugins.concat(new webpack.DefinePlugin({
+    'process.env': {
+      NODE_ENV: JSON.stringify('production')
+    }
+  }), new UglifyJsPlugin());
+
+  bundleConfig.output.filename = 'bundle.min.js';
+
+  return gulp.src('src/index.js')
+    .pipe(gulpWebpack(bundleConfig, webpack))
+    .pipe(gulp.dest('dist/'));
 });
 
-gulp.task('styles', function() {
+gulp.task('styles', function () {
 
   return gulp.src('src/style.less')
     .pipe(less())
@@ -56,7 +65,7 @@ gulp.task('styles', function() {
     }))
     .pipe(gulp.dest('dist'))
     .pipe(minifyCSS())
-    .pipe(rename({suffix: '.min'}))
+    .pipe(rename({ suffix: '.min' }))
     .pipe(gulp.dest('dist'))
     .pipe(connect.reload());
 });
@@ -66,7 +75,7 @@ gulp.task('watch', function () {
   gulp.watch(['src/*.js'], ['scripts']);
 });
 
-gulp.task('connect', function() {
+gulp.task('connect', function () {
   connect.server({
     root: __dirname,
     open: 'demo',
@@ -74,7 +83,7 @@ gulp.task('connect', function() {
   });
 });
 
-gulp.task('test', function(done) {
+gulp.task('test', function (done) {
   var argv = require('minimist')(process.argv.slice(2));
 
   new KarmaServer({
