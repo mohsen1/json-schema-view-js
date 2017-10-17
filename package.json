@@ -22,7 +22,7 @@
   "homepage": "https://github.com/mohsen1/json-schema-view-js#readme",
   "dependencies": {
      "json-formatter-js": "^2.2.0"
-  }
+  },
   "devDependencies": {
     "babel": "^5.8.21",
     "babelify": "^6.2.0",
