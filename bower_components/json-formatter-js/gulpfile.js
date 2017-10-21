@@ -13,7 +13,6 @@ var header      = require('gulp-header');
 var rename      = require('gulp-rename');
 var jshint      = require('gulp-jshint');
 var connect     = require('gulp-connect');
-var uglify      = require('gulp-uglify');
 
 var config = {
   pkg : require('./package.json'),
@@ -31,19 +30,12 @@ gulp.task('jshint', function() {
 });
 
 gulp.task('scripts', ['jshint'], function() {
-  return browserify('src/index.js', {debug: true, standalone: 'JSONSchemaView'})
-    .transform(babelify.configure({compact: false}))
+  return browserify('src/index.js', { debug: true })
+    .transform(babelify)
     .bundle()
     .on('error', logError)
     .pipe(connect.reload())
     .pipe(fs.createWriteStream('dist/bundle.js'));
-});
-
-gulp.task('uglify', ['scripts'], function() {
-  gulp.src('dist/bundle.js')
-    .pipe(uglify())
-    .pipe(rename({basename: 'bundle.min'}))
-    .pipe(gulp.dest('dist'));
 });
 
 gulp.task('styles', function() {
@@ -68,7 +60,7 @@ gulp.task('watch', function () {
 
 gulp.task('connect', function() {
   connect.server({
-    root: __dirname,
+    root: '.',
     open: 'demo',
     livereload: true
   });
@@ -84,7 +76,7 @@ gulp.task('test', function(done) {
 });
 
 gulp.task('serve', ['watch', 'connect']);
-gulp.task('default', ['styles', 'uglify']);
+gulp.task('default', ['styles', 'scripts']);
 
 function logError(err) {
   console.log('Error :\n' + err.message);
