@@ -13,7 +13,6 @@ module.exports = function(config) {
 
     // List of files / patterns to load in the browser
     files: [
-      'bower_components/json-formatter-js/dist/bundle.js',
       'dist/bundle.js',
       'dist/style.css',
       'test/spec.js'

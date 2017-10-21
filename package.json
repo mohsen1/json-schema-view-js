@@ -5,7 +5,8 @@
   "main": "dist/bundle.js",
   "scripts": {
     "test": "gulp test --singleRun=true",
-    "build": "gulp"
+    "build": "gulp uglify",
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -24,12 +25,15 @@
     "json-formatter-js": "^2.2.0"
   },
   "devDependencies": {
-    "babel": "^5.8.21",
-    "babelify": "^6.2.0",
-    "browserify": "^11.0.1",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.1",
     "chai": "^3.2.0",
+    "eslint": "^4.9.0",
+    "eslint-loader": "^1.9.0",
     "gulp": "^3.9.0",
     "gulp-connect": "^2.2.0",
+    "gulp-eslint": "^4.0.0",
     "gulp-header": "^1.7.1",
     "gulp-jshint": "^1.11.2",
     "gulp-less": "^3.0.3",
@@ -44,6 +48,12 @@
     "karma-mocha": "^0.2.0",
     "karma-mocha-reporter": "^1.1.1",
     "minimist": "^1.2.0",
-    "mocha": "^2.2.5"
+    "mocha": "^2.2.5",
+    "uglifyjs-webpack-plugin": "^1.0.0-beta.3",
+    "webpack": "^3.8.1",
+    "webpack-stream": "^4.0.0"
+  },
+  "dependencies": {
+    "vinyl": "^2.1.0"
   }
 }

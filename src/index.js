@@ -1,13 +1,10 @@
 'use strict';
 
-/* globals JSONSchemaView */
-
 import JSONFormatter from 'json-formatter-js';
 import {
   convertXOf,
   _if
 } from './helpers.js';
-
 
 /**
  * @class JSONSchemaView
@@ -219,7 +216,7 @@ export default class JSONSchemaView {
           `}
         </div>
       `}
-`.replace(/\s*\n/g, '\n').replace(/(\<\!\-\-).+/g, '').trim();
+`.replace(/\s*\n/g, '\n').replace(/(<!--).+/g, '').trim();
   }
 
   /*
@@ -236,7 +233,7 @@ export default class JSONSchemaView {
   /*
    * Template for enums
   */
-  enum(schema, isCollapsed, open) {
+  enum(schema, isCollapsed/*, open*/) {
     return `
       ${_if(!isCollapsed && schema.enum)`
         <div class="inner enums">
@@ -316,7 +313,7 @@ export default class JSONSchemaView {
     if (typeof this.schema.properties === 'object') {
       Object.keys(this.schema.properties).forEach(propertyName => {
         const property = this.schema.properties[propertyName];
-        const tempDiv = document.createElement('div');;
+        const tempDiv = document.createElement('div');
         tempDiv.innerHTML = `<div class="property">
           <span class="name">${propertyName}:</span>
         </div>`;
