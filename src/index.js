@@ -58,7 +58,7 @@ export default class JSONSchemaView {
         this.schema.maximum ||
         this.schema.exclusiveMinimum ||
         this.schema.exclusiveMaximum ||
-        this.schema.format ||        
+        this.schema.format ||
         this.schema.default ||
         this.schema.minLength ||
         this.schema.maxLength ||
@@ -119,7 +119,7 @@ export default class JSONSchemaView {
 
           ${_if(!this.isCollapsed && this.schema.default)`
             <span class="default">default: ${this.schema.default}</span>
-          `} 
+          `}
 
           ${_if(!this.isCollapsed && this.schema.minimum)`
             <span class="range minimum">minimum:${this.schema.minimum}</span>
@@ -301,7 +301,7 @@ export default class JSONSchemaView {
     }
 
     if (this.schema.enum) {
-      const formatter = new JSONFormatter(this.schema.enum, this.open - 1);
+      const formatter = new JSONFormatter(this.schema.enum, this.open - 1, { theme: this.options.theme });
       const formatterEl = formatter.render();
       formatterEl.classList.add('inner');
       element.querySelector('.enums.inner').appendChild(formatterEl);
@@ -309,7 +309,7 @@ export default class JSONSchemaView {
     }
 
     if (this.isArray) {
-      const view = new JSONSchemaView(this.schema.items, this.open - 1)
+      const view = new JSONSchemaView(this.schema.items, this.open - 1, this.options)
       inner.appendChild(view.render());
     }
 
@@ -320,7 +320,7 @@ export default class JSONSchemaView {
         tempDiv.innerHTML = `<div class="property">
           <span class="name">${propertyName}:</span>
         </div>`;
-        const view = new JSONSchemaView(property, this.open - 1);
+        const view = new JSONSchemaView(property, this.open - 1, this.options);
         tempDiv.querySelector('.property').appendChild(view.render());
 
         inner.appendChild(tempDiv.querySelector('.property'));
@@ -337,7 +337,7 @@ export default class JSONSchemaView {
       this.schema[type].forEach(schema => {
         const inner = document.createElement('div');
         inner.classList.add('inner');
-        const view = new JSONSchemaView(schema, this.open - 1);
+        const view = new JSONSchemaView(schema, this.open - 1, this.options);
         inner.appendChild(view.render());
         innerAllOf.appendChild(inner);
       });
