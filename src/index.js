@@ -31,6 +31,9 @@ export default class JSONSchemaView {
     this.options = options;
     this.isCollapsed = open <= 0;
 
+    // Guard against empty schemas
+    if (!this.schema) return '';
+
     // if schema is an empty object which means any JOSN
     this.isAny = typeof schema === 'object' &&
       !Array.isArray(schema) &&
@@ -40,6 +43,11 @@ export default class JSONSchemaView {
     // Determine if a schema is an array
     this.isArray = !this.isAny && this.schema && this.schema.type === 'array';
 
+    // Determine if a schema is a collection of types (an Array with at least one object in it)
+    this.isCollectionOfTypes = this.schema &&
+      Array.isArray(this.schema.type) &&
+      this.schema.type.reduce((item) => typeof item === 'object');
+
     this.isObject = this.schema &&
       (this.schema.type === 'object' ||
        this.schema.properties ||
@@ -48,7 +56,7 @@ export default class JSONSchemaView {
        this.schema.allOf);
 
     // Determine if a schema is a primitive
-    this.isPrimitive = !this.isAny && !this.isArray && !this.isObject;
+    this.isPrimitive = !this.isAny && !this.isArray && !this.isObject && !this.isCollectionOfTypes;
 
     //
     this.showToggle = this.schema.description ||
@@ -71,6 +79,13 @@ export default class JSONSchemaView {
         if (typeof this.schema.properties[requiredProperty] === 'object') {
           this.schema.properties[requiredProperty].isRequired = true;
         }
+      });
+    }
+
+    // Create a list of types as a string for Collections of types
+    if(this.isCollectionOfTypes) {
+      this.typeList = this.schema.type.reduce((prev, curr) => {
+        return prev.type + ', ' + curr.type;
       });
     }
   }
@@ -191,7 +206,7 @@ export default class JSONSchemaView {
       `}
 
       <!-- Object -->
-      ${_if(!this.isPrimitive && !this.isArray && !this.isAny)`
+      ${_if(!this.isPrimitive && !this.isArray && !this.isAny && !this.isCollectionOfTypes)`
         <div class="object">
           <a class="title"><span
             class="toggle-handle"></span>${this.schema.title || ''} <span
@@ -217,6 +232,20 @@ export default class JSONSchemaView {
           ${_if(!this.isCollapsed)`
           <span class="closing brace">}</span>
           `}
+        </div>
+      `}
+
+      <!-- Type Array -->
+      ${_if(this.isCollectionOfTypes)`
+        <div class="collectionOfTypes">
+          <a class="title"><span class="toggle-handle"></span>${this.schema.title || ''}</a>
+          <span class="type">${this.typeList}</span>
+          <div class="inner">
+            ${_if(this.schema.description && !this.isCollapsed)`
+              <div class="description">${this.schema.description}</div>
+            `}
+             <!-- children go here -->
+          </div>
         </div>
       `}
 `.replace(/\s*\n/g, '\n').replace(/(\<\!\-\-).+/g, '').trim();
@@ -311,6 +340,15 @@ export default class JSONSchemaView {
     if (this.isArray) {
       const view = new JSONSchemaView(this.schema.items, this.open - 1)
       inner.appendChild(view.render());
+    }
+
+    if (this.isCollectionOfTypes) {
+      const openLevel = this.open - 1;
+      this.schema.type.forEach((type) => {
+        const view = new JSONSchemaView(type, openLevel);
+        inner.appendChild(view.render());
+      });
+
     }
 
     if (typeof this.schema.properties === 'object') {
