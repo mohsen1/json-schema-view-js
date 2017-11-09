@@ -137,12 +137,20 @@ document.body.appendChild(view.render());</pre>
             description: 'Anything from objects to arrays!'
           }
         },
+
         {
           title: 'Simple',
           schema: {
             title: 'Name',
             description: 'A name',
             type: 'string'
+          }
+        },
+
+        {
+          title: 'Ref (options.showRef = true)',
+          schema: {
+            $ref: 'http://foo.bar'
           }
         },
 
@@ -444,7 +452,7 @@ document.body.appendChild(view.render());</pre>
 
       examples.forEach(function(example) {
         var title = document.createElement('h3');
-        var formatter = new JSONSchemaView(example.schema, 1, {theme: example.theme});
+        var formatter = new JSONSchemaView(example.schema, 1, {theme: example.theme, showRefs: true});
 
         title.innerText = example.title;
 
