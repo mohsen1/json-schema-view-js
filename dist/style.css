@@ -1,11 +1,3 @@
-/*!
- * json-schema-view-js
- * https://github.com/mohsen1/json-schema-view-js#readme
- * Version: 0.4.0 - 2015-11-05T03:20:06.642Z
- * License: MIT
- */
-
-
 .json-schema-view,
 json-schema-view {
   font-family: monospace;
@@ -27,14 +19,14 @@ json-schema-view .toggle-handle {
 }
 .json-schema-view .toggle-handle:after,
 json-schema-view .toggle-handle:after {
-  content: "▼";
+  content: "\25BC";
 }
 .json-schema-view .toggle-handle,
 json-schema-view .toggle-handle,
 .json-schema-view .toggle-handle:hover,
 json-schema-view .toggle-handle:hover {
   text-decoration: none;
-  color: #333333;
+  color: #333;
 }
 .json-schema-view .description,
 json-schema-view .description {
@@ -51,7 +43,7 @@ json-schema-view .title,
 .json-schema-view .title:hover,
 json-schema-view .title:hover {
   text-decoration: none;
-  color: #333333;
+  color: #333;
 }
 .json-schema-view .title,
 json-schema-view .title,
@@ -59,7 +51,7 @@ json-schema-view .title,
 json-schema-view .brace,
 .json-schema-view .bracket,
 json-schema-view .bracket {
-  color: #333333;
+  color: #333;
 }
 .json-schema-view .property,
 json-schema-view .property {
@@ -87,7 +79,13 @@ json-schema-view .type-any {
 }
 .json-schema-view .required,
 json-schema-view .required {
-  color: #ff0000;
+  color: #F00;
+}
+.json-schema-view .format,
+json-schema-view .format,
+.json-schema-view .enums,
+json-schema-view .enums {
+  color: #000;
 }
 .json-schema-view .inner,
 json-schema-view .inner {
@@ -130,14 +128,14 @@ json-schema-view[json-schema-view-dark] .toggle-handle {
 }
 .json-schema-view.json-schema-view-dark .toggle-handle:after,
 json-schema-view[json-schema-view-dark] .toggle-handle:after {
-  content: "▼";
+  content: "\25BC";
 }
 .json-schema-view.json-schema-view-dark .toggle-handle,
 json-schema-view[json-schema-view-dark] .toggle-handle,
 .json-schema-view.json-schema-view-dark .toggle-handle:hover,
 json-schema-view[json-schema-view-dark] .toggle-handle:hover {
   text-decoration: none;
-  color: #eeeeee;
+  color: #eee;
 }
 .json-schema-view.json-schema-view-dark .description,
 json-schema-view[json-schema-view-dark] .description {
@@ -154,7 +152,7 @@ json-schema-view[json-schema-view-dark] .title,
 .json-schema-view.json-schema-view-dark .title:hover,
 json-schema-view[json-schema-view-dark] .title:hover {
   text-decoration: none;
-  color: #eeeeee;
+  color: #eee;
 }
 .json-schema-view.json-schema-view-dark .title,
 json-schema-view[json-schema-view-dark] .title,
@@ -162,7 +160,7 @@ json-schema-view[json-schema-view-dark] .title,
 json-schema-view[json-schema-view-dark] .brace,
 .json-schema-view.json-schema-view-dark .bracket,
 json-schema-view[json-schema-view-dark] .bracket {
-  color: #eeeeee;
+  color: #eee;
 }
 .json-schema-view.json-schema-view-dark .property,
 json-schema-view[json-schema-view-dark] .property {
@@ -192,6 +190,12 @@ json-schema-view[json-schema-view-dark] .type-any {
 json-schema-view[json-schema-view-dark] .required {
   color: #fe0000;
 }
+.json-schema-view.json-schema-view-dark .format,
+json-schema-view[json-schema-view-dark] .format,
+.json-schema-view.json-schema-view-dark .enums,
+json-schema-view[json-schema-view-dark] .enums {
+  color: #fff;
+}
 .json-schema-view.json-schema-view-dark .inner,
 json-schema-view[json-schema-view-dark] .inner {
   padding-left: 18px;
@@ -212,3 +216,5 @@ json-schema-view[json-schema-view-dark].collapsed .closeing.brace {
 json-schema-view[json-schema-view-dark].collapsed .toggle-handle {
   transform: rotate(-90deg);
 }
+
+/*# sourceMappingURL=style.css.map*/
