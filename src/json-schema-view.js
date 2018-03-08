@@ -41,7 +41,7 @@ export default class JSONSchemaView {
       (this.schema.type === 'object' ||
        this.schema.properties ||
        this.schema.anyOf ||
-       this.schema.oneof ||
+       this.schema.oneOf ||
        this.schema.allOf);
 
     // Determine if a schema is a primitive
