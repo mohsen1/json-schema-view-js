@@ -1,4 +1,4 @@
-'use strict';
+import JSONSchemaView from '../src';
 
 const schema = {
   title: 'BloodType',
@@ -33,16 +33,16 @@ describe('rendering', ()=> {
       const view = new JSONSchemaView(schema, 0);
       const el = view.render();
 
-      expect(el.classList.toString()).to.contain('collapsed');
-      expect(el.querySelector('.inner.oneOf')).to.be.null;
+      expect(el.classList.toString()).toContain('collapsed');
+      expect(el.querySelector('.inner.oneOf')).toBeNull();
     });
 
     it('renders the children when open is not 0', ()=> {
       const view = new JSONSchemaView(schema, 2);
       const el = view.render();
 
-      expect(el.classList.toString()).not.to.contain('collapsed');
-      expect(el.querySelector('.inner.oneOf').innerHTML.trim()).not.to.equal('');
+      expect(el.classList.toString()).not.toContain('collapsed');
+      expect(el.querySelector('.inner.oneOf').innerHTML.trim()).not.toEqual('');
     });
   });
 });

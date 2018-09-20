@@ -1,109 +1,111 @@
-.theme(@text-color: #000, @bold-color: #333, @required-color: #F00, @blue: blue, @green: green,
+#json-schema-view-js {
+  .theme(@text-color: #000, @bold-color: #333, @required-color: #F00, @blue: blue, @green: green,
   @indent: 18px, @font-size: 14px) {
 
-  font-family: monospace;
-  font-size: 0;
-  display: table-cell;
-
-
-  > * {
-    font-size: @font-size;
-  }
-
-  .toggle-handle {
-    cursor: pointer;
-    margin: auto .3em;
-    font-size: 10px;
-    display: inline-block;
-    transform-origin: 50% 40%;
-    transition: transform 150ms ease-in;
-
-    &:after {
-      content: "▼";
-    }
-
-    &, &:hover {
-      text-decoration: none;
-      color: @bold-color;
-    }
-  }
-
-  .description {
-    color: gray;
-    font-style: italic;
-  }
-
-  .title {
-    font-weight: bold;
-    cursor: pointer;
-    &, &:hover {
-      text-decoration: none;
-      color: @bold-color;
-    }
-  }
-
-  .title, .brace, .bracket {
-    color: @bold-color;
-  }
-
-  .property {
+    font-family: monospace;
     font-size: 0;
-    display: table-row;
+    display: table-cell;
+
 
     > * {
       font-size: @font-size;
-      padding: .2em;
     }
 
-  }
-
-  .name {
-    color: @blue;
-    display: table-cell;
-    vertical-align: top;
-  }
-
-  .type {
-    color: @green;
-  }
-
-  .type-any {
-    color: lighten(@blue, 10%);
-  }
-
-  .required {
-    color: @required-color;
-  }
-
-  .format, .enums {
-    color: @text-color
-  }
-
-  .inner {
-    padding-left: @indent;
-  }
-
-  &.collapsed {
-    .description {
-      display: none;
-    }
-    .property {
-      display: none;
-    }
-    .closeing.brace {
-      display: inline-block;
-    }
     .toggle-handle {
-      transform: rotate(-90deg);
+      cursor: pointer;
+      margin: auto .3em;
+      font-size: 10px;
+      display: inline-block;
+      transform-origin: 50% 40%;
+      transition: transform 150ms ease-in;
+
+      &:after {
+        content: "▼";
+      }
+
+      &, &:hover {
+        text-decoration: none;
+        color: @bold-color;
+      }
+    }
+
+    .description {
+      color: gray;
+      font-style: italic;
+    }
+
+    .title {
+      font-weight: bold;
+      cursor: pointer;
+      &, &:hover {
+        text-decoration: none;
+        color: @bold-color;
+      }
+    }
+
+    .title, .brace, .bracket {
+      color: @bold-color;
+    }
+
+    .property {
+      font-size: 0;
+      display: table-row;
+
+      > * {
+        font-size: @font-size;
+        padding: .2em;
+      }
+
+    }
+
+    .name {
+      color: @blue;
+      display: table-cell;
+      vertical-align: top;
+    }
+
+    .type {
+      color: @green;
+    }
+
+    .type-any {
+      color: lighten(@blue, 10%);
+    }
+
+    .required {
+      color: @required-color;
+    }
+
+    .format, .enums {
+      color: @text-color
+    }
+
+    .inner {
+      padding-left: @indent;
+    }
+
+    &.collapsed {
+      .description {
+        display: none;
+      }
+      .property {
+        display: none;
+      }
+      .closeing.brace {
+        display: inline-block;
+      }
+      .toggle-handle {
+        transform: rotate(-90deg);
+      }
     }
   }
 }
 
 .json-schema-view, json-schema-view {
-  .theme();
+  #json-schema-view-js > .theme();
 }
 
 .json-schema-view.json-schema-view-dark,
 json-schema-view[json-schema-view-dark] {
-  .theme(@text-color: #fff, @bold-color: #eee, @required-color: #fe0000, @blue: lightblue, @green: lightgreen);
+  #json-schema-view-js > .theme(@text-color: #fff, @bold-color: #eee, @required-color: #fe0000, @blue: lightblue, @green: lightgreen);
 }
