@@ -144,7 +144,7 @@ export default class JSONSchemaView {
           `}
 
            ${_if(!this.isCollapsed && this.schema.pattern)`
-            <span class="range pattern">pattern:${this.schema.pattern}</span>
+            <span class="pattern">pattern:${this.schema.pattern}</span>
           `}
 
           ${_if(this.schema.description && !this.isCollapsed)`
