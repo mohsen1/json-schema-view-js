@@ -59,6 +59,7 @@ export default class JSONSchemaView {
         this.schema.default ||
         this.schema.minLength ||
         this.schema.maxLength ||
+        this.schema.pattern ||
         this.schema.enum)
       );
 
@@ -140,6 +141,10 @@ export default class JSONSchemaView {
 
           ${_if(!this.isCollapsed && this.schema.maxLength)`
             <span class="range maxLength">maxLength:${this.schema.maxLength}</span>
+          `}
+
+           ${_if(!this.isCollapsed && this.schema.pattern)`
+            <span class="pattern">pattern:${this.schema.pattern}</span>
           `}
 
           ${_if(this.schema.description && !this.isCollapsed)`
