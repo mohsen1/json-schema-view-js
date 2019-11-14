@@ -87,7 +87,7 @@ export default class JSONSchemaView {
       ${_if(this.isAny)`
         <div class="any">
           ${_if(this.showToggle)`
-            <a class="title"><span class="toggle-handle"></span>${this.schema.title || ''} </a>
+            <a class="title"><span class="toggle-handle"></span><span class="schema-title">${this.schema.title || ''}</span> </a>
           `}
 
           <span class="type type-any">&lt;any&gt;</span>
@@ -102,10 +102,10 @@ export default class JSONSchemaView {
       ${_if(this.isPrimitive)`
         <div class="primitive">
           ${_if(this.showToggle)`
-            <a class="title"><span class="toggle-handle"></span>${this.schema.title || ''} </a>
+            <a class="title"><span class="toggle-handle"></span><span class="schema-title">${this.schema.title || ''}</span> </a>
           `}
 
-            <span class="type">${this.schema.type}</span>
+            <span class="type type-${this.schema.type}">${this.schema.type}</span>
 
           ${_if(this.schema.isRequired)`
             <span class="required">*</span>
@@ -165,7 +165,7 @@ export default class JSONSchemaView {
       <!-- Array -->
       ${_if(this.isArray)`
         <div class="array">
-          <a class="title"><span class="toggle-handle"></span>${this.schema.title || ''}<span class="opening bracket">[</span>${_if(this.isCollapsed)`<span class="closing bracket">]</span>`}</a>
+          <a class="title"><span class="toggle-handle"></span><span class="schema-title">${this.schema.title || ''}</span><span class="opening bracket">[</span>${_if(this.isCollapsed)`<span class="closing bracket">]</span>`}</a>
           ${_if(!this.isCollapsed && (this.schema.uniqueItems || this.schema.minItems || this.schema.maxItems))`
           <span>
             <span title="items range">(${this.schema.minItems || 0}..${this.schema.maxItems || '∞'})</span>
@@ -196,7 +196,7 @@ export default class JSONSchemaView {
       ${_if(!this.isPrimitive && !this.isArray && !this.isAny)`
         <div class="object">
           <a class="title"><span
-            class="toggle-handle"></span>${this.schema.title || ''} <span
+            class="toggle-handle"></span><span class="schema-title">${this.schema.title || ''}</span> <span
             class="opening brace">{</span>${_if(this.isCollapsed)`
               <span class="closing brace" ng-if="isCollapsed">}</span>
           `}</a>
