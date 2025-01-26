@@ -27,7 +27,7 @@
   "homepage": "https://github.com/mohsen1/json-schema-view-js#readme",
   "dependencies": {
     "json-formatter-js": "^2.2.0",
-    "vinyl": "^2.1.0"
+    "vinyl": "^2.2.1"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
