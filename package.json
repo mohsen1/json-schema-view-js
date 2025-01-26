@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/mohsen1/json-schema-view-js#readme",
   "dependencies": {
-    "json-formatter-js": "^2.2.0",
+    "json-formatter-js": "^2.5.18",
     "vinyl": "^2.1.0"
   },
   "devDependencies": {
