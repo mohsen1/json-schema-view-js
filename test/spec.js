@@ -45,4 +45,42 @@ describe('rendering', ()=> {
       expect(el.querySelector('.inner.oneOf').innerHTML.trim()).not.toEqual('');
     });
   });
+
+  describe('additionalProperties', () => {
+    it('renders additionalProperties with a schema', () => {
+      const schema = {
+        type: 'object',
+        properties: { name: { type: 'string' } },
+        additionalProperties: { type: 'number' }
+      };
+      const view = new JSONSchemaView(schema, 2);
+      const el = view.render();
+
+      expect(el.querySelector('.additional-properties')).not.toBeNull();
+      expect(el.querySelector('.additional-properties-name').textContent).toContain('[additional properties]');
+    });
+
+    it('renders additionalProperties: true as any type', () => {
+      const schema = {
+        type: 'object',
+        additionalProperties: true
+      };
+      const view = new JSONSchemaView(schema, 2);
+      const el = view.render();
+
+      expect(el.querySelector('.additional-properties')).not.toBeNull();
+    });
+
+    it('does not render additionalProperties: false', () => {
+      const schema = {
+        type: 'object',
+        properties: { name: { type: 'string' } },
+        additionalProperties: false
+      };
+      const view = new JSONSchemaView(schema, 2);
+      const el = view.render();
+
+      expect(el.querySelector('.additional-properties')).toBeNull();
+    });
+  });
 });
