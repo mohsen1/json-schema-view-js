@@ -174,7 +174,7 @@ var JSONSchemaView = function () {
     // Determine if a schema is an array
     this.isArray = !this.isAny && this.schema && this.schema.type === 'array';
 
-    this.isObject = this.schema && (this.schema.type === 'object' || this.schema.properties || this.schema.anyOf || this.schema.oneOf || this.schema.allOf);
+    this.isObject = this.schema && (this.schema.type === 'object' || this.schema.properties || this.schema.additionalProperties || this.schema.anyOf || this.schema.oneOf || this.schema.allOf);
 
     // Determine if a schema is a primitive
     this.isPrimitive = !this.isAny && !this.isArray && !this.isObject;
@@ -315,6 +315,16 @@ var JSONSchemaView = function () {
 
           inner.appendChild(tempDiv.querySelector('.property'));
         });
+      }
+
+      if (this.schema.additionalProperties && this.schema.additionalProperties !== false) {
+        var additionalProps = this.schema.additionalProperties === true ? {} : this.schema.additionalProperties;
+
+        var tempDiv = document.createElement('div');
+        tempDiv.innerHTML = '<div class="property additional-properties">\n        <span class="name additional-properties-name">[additional properties]:</span>\n      </div>';
+        var _view = new JSONSchemaView(additionalProps, this.open - 1);
+        tempDiv.querySelector('.property').appendChild(_view.render());
+        inner.appendChild(tempDiv.querySelector('.property'));
       }
 
       if (this.schema.allOf) {

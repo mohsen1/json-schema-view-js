@@ -434,6 +434,39 @@ document.body.appendChild(view.render());</pre>
               }
             ]
           }
+        },
+
+        {
+          title: 'additionalProperties',
+          schema: {
+            title: 'Config',
+            description: 'A configuration object with known and dynamic properties',
+            type: 'object',
+            properties: {
+              version: {type: 'string'},
+              name: {type: 'string'}
+            },
+            additionalProperties: {
+              type: 'object',
+              properties: {
+                enabled: {type: 'boolean'},
+                value: {type: 'string'}
+              }
+            }
+          }
+        },
+
+        {
+          title: 'additionalProperties: true',
+          schema: {
+            title: 'Metadata',
+            description: 'An object that accepts any additional properties',
+            type: 'object',
+            properties: {
+              id: {type: 'string'}
+            },
+            additionalProperties: true
+          }
         }
       ];
 

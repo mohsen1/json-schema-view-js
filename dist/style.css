@@ -69,6 +69,10 @@ json-schema-view .name {
   display: table-cell;
   vertical-align: top;
 }
+.json-schema-view .additional-properties-name,
+json-schema-view .additional-properties-name {
+  font-style: italic;
+}
 .json-schema-view .type,
 json-schema-view .type {
   color: green;
@@ -179,6 +183,10 @@ json-schema-view[json-schema-view-dark] .name {
   color: lightblue;
   display: table-cell;
   vertical-align: top;
+}
+.json-schema-view.json-schema-view-dark .additional-properties-name,
+json-schema-view[json-schema-view-dark] .additional-properties-name {
+  font-style: italic;
 }
 .json-schema-view.json-schema-view-dark .type,
 json-schema-view[json-schema-view-dark] .type {

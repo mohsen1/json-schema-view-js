@@ -40,6 +40,7 @@ export default class JSONSchemaView {
     this.isObject = this.schema &&
       (this.schema.type === 'object' ||
        this.schema.properties ||
+       this.schema.additionalProperties ||
        this.schema.anyOf ||
        this.schema.oneOf ||
        this.schema.allOf);
@@ -327,6 +328,20 @@ export default class JSONSchemaView {
 
         inner.appendChild(tempDiv.querySelector('.property'));
       });
+    }
+
+    if (this.schema.additionalProperties && this.schema.additionalProperties !== false) {
+      const additionalProps = this.schema.additionalProperties === true
+        ? {}
+        : this.schema.additionalProperties;
+
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = `<div class="property additional-properties">
+        <span class="name additional-properties-name">[additional properties]:</span>
+      </div>`;
+      const view = new JSONSchemaView(additionalProps, this.open - 1);
+      tempDiv.querySelector('.property').appendChild(view.render());
+      inner.appendChild(tempDiv.querySelector('.property'));
     }
 
     if (this.schema.allOf) { appendXOf.call(this, 'allOf'); }
